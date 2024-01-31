@@ -53,11 +53,14 @@
             let moveBy = 5
             let targetX, targetY
 
-            let boardBottom = board.offsetHeight - 82
-            let boardRight = board.offsetWidth - 46
+            let boardBottom = board.offsetHeight - 82 //allows character to detect bottom of board and not pass it
+            let boardRight = board.offsetWidth - 46 //allows character to detect right side of board and not pass it
+
+            //initialize the absolute values of the character, so it can be manipulated with JS
             player.style.top = 0
             player.style.left = 0;
 
+            //randomly assigns each target to a spot on the board
             target.forEach(e=>{
                 e.style.top = 0;
                 e.style.left = 0;
@@ -66,8 +69,6 @@
                 e.style.left = Math.floor(Math.random() * 900) + 'px'
             })
 
-
-            //random number generator
             
             //function for up
             function UpArrow(){
@@ -100,6 +101,7 @@
                 LeftArrow
             ]
             let i = 0, j = 1, k = 2, l = 3
+            //assings random values to the variables representing each direction function
             function Randomize(){
                 i = Math.floor(Math.random() * array_of_functions.length)
                 j = Math.floor(Math.random() * array_of_functions.length)
@@ -111,9 +113,11 @@
                 array_of_functions[n]()
             }
 
+            //sets the Randomize function to execute every two seconds, causing the character to change to a random direction
             setInterval(Randomize, 2000)
 
             document.body.onkeydown = function(e){
+                //collision for character and targets
                 target.forEach(event=>{
                     targetX = event.offsetLeft + 150
                     targetY = event.offsetTop + 150
@@ -122,6 +126,7 @@
                         event.style.display = 'none'
                     }
                 })
+                //switch case for arrow keys to execute direction functions
                 switch(e.code){
                     case 'ArrowUp':
                         //UpArrow()
