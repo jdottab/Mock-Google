@@ -1,66 +1,146 @@
 <!DOCTYPE html>
-
-<html class="dark-theme" id="theme">
+<html>
     <head>
-        <!--Linked CSS-->
-        <link rel="stylesheet" href="style.css">
-        <!--Link to fontawesome icon site-->
-        <script src="https://kit.fontawesome.com/5eac4eb036.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet"  
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <title>Google</title>
+        <style>
+            .board{
+                width: 1000px;
+                height: 700px;
+                background-color: green;
+                position: relative;
+                padding: 10px;
+            }
+            .player{
+                height: 82px;
+                width: 46px;
+                background-color: black;
+                position: absolute;
+            }
+            .target{
+                position: absolute;
+                height: 100px;
+                width: 100px;
+            }
+            #portrait{
+                background: url(./pixil-zoro.png) 0 0;
+            }
+            #back{
+                background: url(./pixil-zoro.png) -46px 0;
+            }
+            #left{
+                background: url(./pixil-zoro.png) 0 82px;
+            }
+            #right{
+                background: url(./pixil-zoro.png) -46px 82px;
+            }
+            #wado{background: url(./pixilart-layers/pixil-layer-1.png);}
+            #shusui{background: url(./pixilart-layers/pixil-layer-3.png);}
+            #enma{background: url(./pixilart-layers/pixil-layer-4.png);}
+            #kitetsu{background: url(./pixilart-layers/pixil-layer-2.png);}
+        </style>
     </head>
     <body>
-        <div class="heading">
-            <div class="left-header">
-                <div class="header-item left-header-item" id="abt">About</div>
-                <div class="header-item left-header-item" id="str">Store</div>
-            </div>
-            <div class="right-header">
-                <div class="header-item right-header-item" id="mail">Gmail</div>
-                <div class="header-item right-header-item" id="imgs">Images</div>
-                <div class="right-header-item apps" id="apps-icon">
-                    <img src="/icons/grid-ic-blk.png" alt="ai" id="ai">
-                </div>
-                <div class="right-header-item" id="prof-pic">
-                    <img src="" alt="pp">
-                </div>
-            </div>
-            
+        <div class="board">
+            <div class="player" id="portrait"></div>
+            <div class="target" id="wado"></div>
+            <div class="target" id="shusui"></div>
+            <div class="target" id="enma"></div>
+            <div class="target" id="kitetsu"></div>
         </div>
-        <div class="center">
-            <div class="name">
-                <div class="letter G">G</div>
-                <div class="letter o1">o</div>
-                <div class="letter o2">o</div>
-                <div class="letter g">g</div>
-                <div class="letter l">l</div>
-                <div class="letter e">e</div>
-            </div>
-            <div class="search">
-                <input type="text" class="search-bar">
-                <div class="search-icon">
-                    <i class="fa-regular fa-magnifying-glass"></i>
-                </div>
-                <div class="mic-icon">
-                    <i class="fa-solid fa-microphone"></i>
-                </div>
-            </div>
-            <div class="buttons">
-                <div class="search-btn">Google Search</div>
-                <div class="rand">I'm Feeling Lucky</div>
-            </div>
+        <script>
+            let player = document.querySelector('.player')
+            let board = document.querySelector('.board')
+            let target = document.querySelectorAll('.target')
+            let moveBy = 5
+            let targetX, targetY
 
-        </div>
-        <div class="footer">
-            <div class="tags">
-                <div class="tag-item active" id="dark">Dark Theme</div>
-                <div class="tag-item " id="og">Classic Theme</div>
-                <div class="tag-item credit">Created by: </div>
-                <div class="tag-item creator"> Josepha Taboh</div>
-            </div>
-        </div>
-        <script src="index.js"></script>
+            let boardBottom = board.offsetHeight - 82
+            let boardRight = board.offsetWidth - 46
+            player.style.top = 0
+            player.style.left = 0;
+
+            target.forEach(e=>{
+                e.style.top = 0;
+                e.style.left = 0;
+                
+                e.style.top = Math.floor(Math.random() * 600) + 'px'
+                e.style.left = Math.floor(Math.random() * 900) + 'px'
+            })
+
+
+            //random number generator
+            
+            //function for up
+            function UpArrow(){
+                player.id = 'back'
+                if(player.offsetTop > 0)
+                    player.style.top = (parseInt(player.style.top) - moveBy) + 'px'
+            }
+            //function for right
+            function RightArrow(){
+                player.id = 'right'
+                if(player.offsetLeft < boardRight)
+                    player.style.left = (parseInt(player.style.left) + moveBy) + 'px'
+            }
+            //function for down
+            function DownArrow(){
+                player.id = 'portrait'
+                if(player.offsetTop < boardBottom)
+                    player.style.top = (parseInt(player.style.top) + moveBy) + 'px'
+            }
+            //function for left
+            function LeftArrow(){
+                player.id = 'left'
+                if(player.offsetLeft > 0)
+                    player.style.left = (parseInt(player.style.left) - moveBy) + 'px'
+            }
+            let array_of_functions = [
+                UpArrow,
+                RightArrow, 
+                DownArrow, 
+                LeftArrow
+            ]
+            let i = 0, j = 1, k = 2, l = 3
+            function Randomize(){
+                i = Math.floor(Math.random() * array_of_functions.length)
+                j = Math.floor(Math.random() * array_of_functions.length)
+                k = Math.floor(Math.random() * array_of_functions.length)
+                l = Math.floor(Math.random() * array_of_functions.length)
+            }
+
+            function MoveDirection(n){
+                array_of_functions[n]()
+            }
+
+            setInterval(Randomize, 2000)
+
+            document.body.onkeydown = function(e){
+                target.forEach(event=>{
+                    targetX = event.offsetLeft + 150
+                    targetY = event.offsetTop + 150
+                    if((player.offsetLeft < targetX && player.offsetLeft > event.offsetLeft) && (player.offsetTop < targetY && player.offsetTop > event.offsetTop)){
+                        console.log('collected ' + event.id + '!')
+                        event.style.display = 'none'
+                    }
+                })
+                switch(e.code){
+                    case 'ArrowUp':
+                        //UpArrow()
+                        MoveDirection(i)
+                        break
+                    case 'ArrowRight':
+                        //RightArrow()
+                        MoveDirection(j)
+                        break
+                    case 'ArrowDown':
+                        //DownArrow()
+                        MoveDirection(k)
+                        break
+                    case 'ArrowLeft':
+                        //LeftArrow()
+                        MoveDirection(l)
+                        break
+                }
+            }
+        </script>
     </body>
-    
 </html>
